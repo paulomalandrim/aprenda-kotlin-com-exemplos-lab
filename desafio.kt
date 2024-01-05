@@ -1,6 +1,6 @@
 enum class Nivel { BASICO, INTERMEDIARIO, AVANCADO }
 
-class Usuario(val nome: String, val codigo: Int)
+class Usuario(val nome: String)
 
 data class ConteudoEducacional(val nome: String, val duracao: Int)
 
@@ -15,12 +15,78 @@ data class Formacao(val nome: String,
         for (aluno in usuarios){
             inscritos.add(aluno)
         }
-        TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")
-        
+    }
+    
+    fun cancelarMatricula(vararg usuarios: Usuario){
+        for (usuario in usuarios){
+            val inscritoEncontrado = inscritos.find( { it.nome.contains(usuario.nome) })
+            if (inscritoEncontrado != null){
+                inscritos.remove(inscritoEncontrado)
+                println("Aluno ${usuario.nome} removido da formação")
+            } else {
+                println("Aluno ${usuario.nome} não encontrado")
+            }  
+        }
+    }
+    
+    fun listarInscritos(){
+        println()
+        for (inscrito in inscritos){
+            println(" - ${inscrito.nome}")
+        }
+    }
+    
+    fun listarConteudoEducacional(){
+        println()
+        for (conteudo in conteudos){
+            println(" - ${conteudo.nome} com duração de ${conteudo.duracao} minutos")
+        }
     }
 }
 
 fun main() {
-    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-    TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+    
+    // FORMACAO KOTLIN BASICO 
+    val conteudoKotlin = listOf(ConteudoEducacional("Introcução Kotlin", 10),
+                               ConteudoEducacional("Comandos Básicos", 20))
+    val formacaoKotlin: Formacao = Formacao("Formação Kotlin Básico",
+                                           conteudoKotlin ,
+                                           Nivel.BASICO)
+    println("A ${formacaoKotlin.nome} tem o seguinte conteúdo: ")
+    formacaoKotlin.listarConteudoEducacional()
+    println()
+    
+    // MATRICULAR APENAS UM ALUNO NA FORMACAO
+    formacaoKotlin.matricular(Usuario("Paulo Malandrim"))
+    
+    print("Alunos matriculados na formação de Kotlin Básico:")
+    formacaoKotlin.listarInscritos()
+    println()
+    
+    // MATRICULAR VÁRIOS ALUNOS DE UMA SÓ VEZ NA FORMACAO
+    formacaoKotlin.matricular(Usuario("João Lucas"),
+                              Usuario("Eduardo"),
+                              Usuario("José Antonio"),
+                              Usuario("Luiz Henrique"),
+                              Usuario("Maria Clara"))
+    
+    print("Alunos matriculados na formação de Kotlin Básico:")
+    formacaoKotlin.listarInscritos()
+    println()
+    
+    // TENTATIVA DE REMOVER UM ALUNO INEXISTENTE DA FORMACAO
+    formacaoKotlin.cancelarMatricula(Usuario("Fernando"))
+    
+    // REMOVER APENAS UM ALUNO DA FORMACAO
+    formacaoKotlin.cancelarMatricula(Usuario("João Lucas"))
+    
+    // REMOVER VÁRIOS ALUNOS DA FORMACAO
+    formacaoKotlin.cancelarMatricula(Usuario("José Antonio"),
+                                     Usuario("Eduardo"),
+                                     Usuario("Paulo Malandrim"))
+
+    print("Alunos matriculados na formação de Kotlin Básico:")
+    formacaoKotlin.listarInscritos()
+    println()
+        
 }
